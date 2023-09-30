@@ -13,4 +13,5 @@ add_executable(GVZork
         Location.cpp
         Location.hpp
         NPC.cpp
-        NPC.hpp)
+        NPC.hpp
+        testmain.cpp)

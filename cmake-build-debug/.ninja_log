@@ -1,0 +1,17 @@
+# ninja log v5
+0	101	7178063226485356	CMakeFiles/GVZork.dir/Game.cpp.obj	204f0bfe3c9188b
+6	103	7178063226506027	CMakeFiles/GVZork.dir/Item.cpp.obj	a086fae63a4503f1
+24	111	7178063226588589	CMakeFiles/GVZork.dir/NPC.cpp.obj	5a4c916cdf28333f
+12	470	7178063230198568	CMakeFiles/GVZork.dir/Location.cpp.obj	347287870f651d27
+18	532	7178063230799588	CMakeFiles/GVZork.dir/testmain.cpp.obj	ce57e42060b77cac
+532	754	7178063232979128	GVZork.exe	8c40cae44ebadda5
+4	85	7178063952664583	CMakeFiles/GVZork.dir/Location.cpp.obj	347287870f651d27
+11	408	7178063955900930	CMakeFiles/GVZork.dir/Item.cpp.obj	a086fae63a4503f1
+19	430	7178063956138993	CMakeFiles/GVZork.dir/testmain.cpp.obj	ce57e42060b77cac
+431	551	7178063957247897	GVZork.exe	8c40cae44ebadda5
+5	508	7178065186076661	CMakeFiles/GVZork.dir/testmain.cpp.obj	ce57e42060b77cac
+509	641	7178065187342708	GVZork.exe	8c40cae44ebadda5
+5	425	7178066013345511	CMakeFiles/GVZork.dir/testmain.cpp.obj	ce57e42060b77cac
+425	577	7178066014803477	GVZork.exe	8c40cae44ebadda5
+5	456	7178067215673275	CMakeFiles/GVZork.dir/testmain.cpp.obj	ce57e42060b77cac
+457	567	7178067216725900	GVZork.exe	8c40cae44ebadda5
