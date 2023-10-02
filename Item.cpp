@@ -28,7 +28,6 @@ Item::Item (std::string nme, std::string desc, int cals, float wgt) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Item& item) {
-    // format -> NAME (X calories) - X lb - DESCRIPTION
     os << item.name << " (" << item.calories << " calories) - " << item.weight << " lb(s) - " << item.description;
     return os;
 }
