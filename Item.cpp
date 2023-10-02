@@ -1,9 +1,9 @@
 #include "Item.hpp"
-Item::Item (std::string nme, std::string desc, int cals, float wgt) {
-    name = nme;
-    description = desc;
-    calories = cals;
-    weight = wgt;
+Item::Item (std::string name, std::string description, int calories, float weight) {
+    this->name = name;
+    this->description = description;
+    this->calories = calories;
+    this->weight = weight;
 
     // exception handling
     std::string errorMsg;

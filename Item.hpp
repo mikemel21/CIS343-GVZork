@@ -17,7 +17,7 @@ public:
     int calories;
     float weight;
     // Constructor to create an Item object with specific name, description, calories, and weight
-    Item (std::string nme, std::string desc, int cals, float wgt);
+    Item (std::string name, std::string description, int calories, float weight);
 };
 
 // stream overloader that will print/return Item in format NAME (X calories) - X lb - DESCRIPTION
