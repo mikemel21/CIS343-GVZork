@@ -24,7 +24,7 @@ public:
     std::vector<std::string> messageVector;
 
     // Constructor that will accept an NPC name and description
-    NPC (std::string name, std::string description);
+    NPC (const std::string& name, const std::string& description);
 
     // getter for NPC name
     std::string getName() const;

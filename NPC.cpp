@@ -1,7 +1,14 @@
 #include "NPC.hpp"
-NPC::NPC (std::string name, std::string description) {
+#include <stdexcept>
+NPC::NPC (const std::string& name, const std::string& description) {
     this->name = name;
     this->description = description;
+
+    // exception handlingL: throw exception if name or description are empty
+    if (name.empty())
+        throw std::invalid_argument("NPC Name cannot be empty.");
+    if (description.empty())
+        throw std::invalid_argument("NPC Description cannot be empty");
 }
 
 std::string NPC::getName() const {
