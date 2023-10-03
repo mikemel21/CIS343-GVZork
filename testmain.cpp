@@ -9,11 +9,13 @@ int main() {
     NPC b("a dude", "I am a dude");
     NPC n("another NPC", "just another npc");
     Location c("Palace", "Just a castle but prettier");
+    Location f("another location", "yes");
 
     c.add_item(a);
     c.add_item(anotherItem);
     c.add_npc(b);
     c.add_npc(n);
+    c.add_location("north", f);
 
     std::cout << c << std::endl;
 }
