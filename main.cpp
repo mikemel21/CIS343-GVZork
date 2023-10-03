@@ -1,8 +1,8 @@
 #include "Item.hpp"
 #include "NPC.hpp"
 #include "Location.hpp"
-//! THIS IS JUST A TESTING FILE!!! DELETE WHEN FINISHED
-// NO PERMANENT CODE WILL GO HERE
+#include "Game.hpp"
+
 int main() {
     Item a("Sword", "rusty and old", 100, 123);
     Item anotherItem("another item", "just another item", 50, 100);

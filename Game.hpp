@@ -7,14 +7,15 @@
 
 class Game {
     private:
-        // std::map<std::string, function<void(*) (std::vector<std::string>)> commands;
+        std::map<std::string, void (*)(const std::vector<std::string>&)> commands; //! Not sure if correct
         
         std::vector<Item> itemVector; // vector that holds all the items the player has
         std::vector<Location> locationVector; // vector that holds all locations in the world
         int weight; // stores the player's weight
         int elfCalorieGoal; // stores the # of calories the elf needs to save the campus
-        bool inProgress; // bool that stores whether the game is in progress
+        bool inProgress = true; // bool that stores whether the game is in progress
         // stores player's current location
+        Location curLoc;
     public:
         // Constructor with no parameters
         Game();
