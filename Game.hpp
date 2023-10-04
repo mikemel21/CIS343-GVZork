@@ -15,7 +15,7 @@ class Game {
         int elfCalorieGoal; // stores the # of calories the elf needs to save the campus
         bool inProgress = true; // bool that stores whether the game is in progress
         // stores player's current location
-        Location curLoc;
+        //Location curLoc;
     public:
         // Constructor with no parameters
         Game();
@@ -26,7 +26,7 @@ class Game {
         // Keys -> 
         // Values -> names of the functions that will be called
         // must return the map
-        std::map<std::string, void(*) (std::vector<std::string>)> setup_commands();
+        std::map<std::string, void(*) (const std::vector<std::string>&)> setup_commands();
 
         // chooses random Location from locations vector and returns that location
         Location random_location();
