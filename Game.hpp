@@ -7,10 +7,10 @@
 
 class Game {
     private:
-        std::map<std::string, void (*)(const std::vector<std::string>)> commandMap; //! Not sure if correct
+        std::map<std::string, void (Game::*)(std::vector<std::string>)> commandMap; //! Not sure if correct
         
         std::vector<Item> itemVector; // vector that holds all the items the player has
-        std::vector<Location> locationVector; // vector that holds all locations in the world
+        std::vector<std::reference_wrapper<Location> > locationVector; // vector that holds all locations in the world
         int weight; // stores the player's weight
         int elfCalorieGoal; // stores the # of calories the elf needs to save the campus
         bool inProgress = true; // bool that stores whether the game is in progress
@@ -26,7 +26,7 @@ class Game {
         // Keys -> 
         // Values -> names of the functions that will be called
         // must return the map
-        std::map<std::string, void(*) (const std::vector<std::string>)> setup_commands();
+        std::map<std::string, void(Game::*) (std::vector<std::string>)> setup_commands();
 
         // chooses random Location from locations vector and returns that location
         Location random_location();
