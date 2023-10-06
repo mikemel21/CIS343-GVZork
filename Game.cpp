@@ -5,7 +5,9 @@
 Game::Game () {
     create_world();
     locationVector = std::vector<std::reference_wrapper<Location> >(locs.begin(), locs.end());
-    curLoc = random_location();
+    cur = random_location();
+    //curLoc = cur;
+    //cur = random_location();
     //std::cout << curLoc << std::endl;
     weight = 0;
     elfCalorieGoal = 5000;
@@ -15,39 +17,55 @@ Game::Game () {
 void Game::create_world () {
     // create/add locations to the location vector
     // kirkhoff -> locationVector[0]
-    this->locs.push_back(Location ("Kirkhoff", "Has food and club meeting areas."));
+    this->locs.push_back(Location("Kirkhoff", "Has food and club meeting areas."));
     // Mak -> locationVector[1]
-    this->locs.push_back(Location ("Mackinac Hall", "Where computer science majors go to cry"));
+    this->locs.push_back(Location("Mackinac Hall", "Where computer science majors go to cry"));
     // Clocktower -> locationVector[2]
-    this->locs.push_back(Location ("Carillon Clocktower", "Scares you with a bell every 15 minutes"));
+    this->locs.push_back(Location("Carillon Clocktower", "Scares you with a bell every 15 minutes"));
     // Bridge -> locationVector[3]
-    this->locs.push_back(Location ("Little Mak Bridge", "Not so little when you're scared of heights"));
+    this->locs.push_back(Location("Little Mak Bridge", "Not so little when you're scared of heights"));
 
     // add clocktower as neighbor to Kirkhoff
-    locs[0].add_location("North", locs[2]);
+    this->locs[0].add_location("North", locs[2]);
     // add Mak bridge as neighbor to Kirkhoff
-    locs[0].add_location("East", locs[3]);
+    this->locs[0].add_location("East", locs[3]);
     // add Mak Hall as a neighbor to Mak Bridge
-    locs[3].add_location("North", locs[1]);
+    this->locs[3].add_location("North", locs[1]);
 
     //Item Coffee ("Coffee", "The only Java I like", 20, 1.0f);
 
     // Kirkhoff Items
-    locs[0].add_item(Item ("Sushi", "Raw Fish... ew", 500, 2.0f));
-    locs[0].add_item(Item ("Club Pamphlet", "This is a pamphlet for the ... lettuce eating club???", 0, 1.0f));
+    this->locs[0].add_item(Item ("Sushi", "Raw Fish... ew", 500, 2.0f));
+    this->locs[0].add_item(Item ("Club Pamphlet", "This is a pamphlet for the ... lettuce eating club???", 0, 1.0f));
 
     // Mak Items
-    locs[1].add_item(Item ("Laptop", "It looks like whoever used this laptop has memory leaks in their C code.", 0, 3.0f));
+    this->locs[1].add_item(Item ("Laptop", "It looks like whoever used this laptop has memory leaks in their C code.", 0, 3.0f));
 
     // Kirkhoff NPCs
-    locs[0].add_npc(NPC ("Coffee Shop employee", "makes the best coffee in all of Kirkhoff"));
+    this->locs[0].add_npc(NPC ("Coffee Shop employee", "makes the best coffee in all of Kirkhoff"));
 
     // Mak NPC's
-    locs[1].add_npc(NPC ("POD store employee", "supplier of energy drinks")); 
+    this->locs[1].add_npc(NPC ("POD store employee", "supplier of energy drinks")); 
 }
 
 void Game::talk (std::vector<std::string> target) {
-    std::cout << "talk" << std::endl;
+    //std::cout << "talk" << std::endl;
+    // Get NPCs in the current room using the get_npcs() method
+    std::vector<NPC> currentRoomNPCs = curLoc.get_npcs();
+
+    // Check if the provided NPC is in the current room 
+        bool in_room = false;
+        for (NPC& npc : currentRoomNPCs) { //not really sure how this 4 loop works
+            if (npc.getName().compare(target.) == 0) {
+                in_room = true;
+                std::cout << "You talk to " << target << ": " << npc.getMessage(npc.messageNum) << std::endl;
+                break;
+            }
+        }
+
+        if (!in_room) {
+            std::cout << target << " is not in the current room." << std::endl;
+        }
 }
 
 void Game::meet (std::vector<std::string> target) {
@@ -76,19 +94,21 @@ std::map<std::string, void(Game::*)(std::vector<std::string>)> Game::setup_comma
     return commandMap;
 }
 
-Location Game::random_location () {
-    // used chatGPT to figure out the syntax with the <random> library
-    std::random_device rd; // Seed the random number generator
-    std::mt19937 mt(rd()); // Mersenne Twister engine
+Location Game::random_location() {
+    // Seed the random number generator
+    std::random_device rd;
+    // Mersenne Twister engine
+    std::mt19937 mt(rd());
 
     // Define uniform distribution for integers between 0 and the size of the locationVector
-    std::uniform_int_distribution<int> distribution(0, locationVector.size()-1);
+    std::uniform_int_distribution<int> distribution(0, locationVector.size() - 1);
 
-    // Generate random number
+    // Generate a random number
     int randNum = distribution(mt);
-    
+
     return locationVector[randNum];
 }
+
 
 // void Game::play(){
 //     //Print msg descriing game

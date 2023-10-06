@@ -21,19 +21,19 @@ private:
     std::string name;
     std::string description;
     bool visited;
-    std::map<std::string, Location> neighbors;
+    std::map<std::string, std::reference_wrapper<Location> > neighbors;
     std::vector<NPC> NPCVector;
     std::vector<Item> ItemVector;
 public:
-
+    Location ();
     // Constructor that takes a Location name and description
     Location (const std::string& name, const std::string& description);
 
     // Returns the neighbors map
-    std::map<std::string, Location> get_locations ();
+    std::map<std::string, std::reference_wrapper<Location> > get_locations ();
 
     // Adds location parameter into the map with the provided direction string (nonempty)
-    void add_location(std::string direction, Location location);
+    void add_location(std::string direction, std::reference_wrapper<Location> location);
 
     // Adds NPC to the Location's NPC vector
     void add_npc (NPC npc);
@@ -66,6 +66,6 @@ public:
     - direction - location (whether it has been visited)
 
     */
-    friend std::ostream& operator<<(std::ostream& os, const Location& location);
+    friend std::ostream& operator<<(std::ostream& os, std::reference_wrapper<Location> location);
 };
 #endif
