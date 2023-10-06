@@ -6,17 +6,18 @@
 #include "Location.hpp"
 
 class Game {
-    private:
-        std::map<std::string, void (Game::*)(std::vector<std::string>)> commandMap; //! Not sure if correct
-        
-        std::vector<Item> itemVector; // vector that holds all the items the player has
-        std::vector<std::reference_wrapper<Location> > locationVector; // vector that holds all locations in the world
+    private:  
+        std::vector<std::reference_wrapper<Item>> itemVector; // vector that holds all the items the player has
+        std::vector<std::reference_wrapper<Location>> locationVector; // vector that holds reference_wraps to all locations in the world
+        std::vector<Location> locs; // vector that holds the location objects in the world
         int weight; // stores the player's weight
         int elfCalorieGoal; // stores the # of calories the elf needs to save the campus
         bool inProgress = true; // bool that stores whether the game is in progress
         // stores player's current location
-        //Location curLoc;
+        Location cur;
+        Location& curLoc = cur;
     public:
+        std::map<std::string, void (Game::*)(std::vector<std::string>)> commandMap; //! Not sure if correct
         // Constructor with no parameters
         Game();
 
@@ -74,4 +75,5 @@ class Game {
 
         //! CREATE TWO ADDITIONAL COMMAND FUNCTIONS
 };
+
 #endif

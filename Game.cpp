@@ -3,8 +3,9 @@
 #include <functional>
 
 Game::Game () {
-    //create_world();
-    //Location curLoc = random_location();
+    create_world();
+    locationVector = std::vector<std::reference_wrapper<Location> >(locs.begin(), locs.end());
+    curLoc = random_location();
     //std::cout << curLoc << std::endl;
     weight = 0;
     elfCalorieGoal = 5000;
@@ -12,41 +13,37 @@ Game::Game () {
 }
 
 void Game::create_world () {
-    // creation of all locations
-    Location Kirkhoff("Kirkhoff", "Has food and club meeting areas.");
-    Location Mak("Mackinac Hall", "Where computer science majors go to cry");
-    Location Clocktower("Carillon Clocktower", "Scares you with a bell every 15 minutes");
-    Location littleMakBridge("Little Mak Bridge", "Not so little when you're scared of heights");
+    // create/add locations to the location vector
+    // kirkhoff -> locationVector[0]
+    this->locs.push_back(Location ("Kirkhoff", "Has food and club meeting areas."));
+    // Mak -> locationVector[1]
+    this->locs.push_back(Location ("Mackinac Hall", "Where computer science majors go to cry"));
+    // Clocktower -> locationVector[2]
+    this->locs.push_back(Location ("Carillon Clocktower", "Scares you with a bell every 15 minutes"));
+    // Bridge -> locationVector[3]
+    this->locs.push_back(Location ("Little Mak Bridge", "Not so little when you're scared of heights"));
 
-    Kirkhoff.add_location("North", Clocktower);
-    Kirkhoff.add_location("East", littleMakBridge);
-    littleMakBridge.add_location("North", Mak);
+    // add clocktower as neighbor to Kirkhoff
+    locs[0].add_location("North", locs[2]);
+    // add Mak bridge as neighbor to Kirkhoff
+    locs[0].add_location("East", locs[3]);
+    // add Mak Hall as a neighbor to Mak Bridge
+    locs[3].add_location("North", locs[1]);
 
-    // add locations to the location vector
-    this->locationVector.push_back(Kirkhoff);
-    this->locationVector.push_back(Mak);
-    this->locationVector.push_back(Clocktower);
-    this->locationVector.push_back(littleMakBridge);
+    //Item Coffee ("Coffee", "The only Java I like", 20, 1.0f);
 
+    // Kirkhoff Items
+    locs[0].add_item(Item ("Sushi", "Raw Fish... ew", 500, 2.0f));
+    locs[0].add_item(Item ("Club Pamphlet", "This is a pamphlet for the ... lettuce eating club???", 0, 1.0f));
 
-    // create Items
-    Item sushi ("Sushi", "Raw Fish... ew", 500, 2.0f);
-    Item clubPamphlet ("Club Pamphlet", "This is a pamphlet for the ... lettuce eating club???", 0, 1.0f);
-    Item laptop ("Laptop", "It looks like whoever used this laptop has memory leaks in their C code.", 0, 3.0f);
-    Item Coffee ("Coffee", "The only Java I like", 20, 1.0f);
+    // Mak Items
+    locs[1].add_item(Item ("Laptop", "It looks like whoever used this laptop has memory leaks in their C code.", 0, 3.0f));
 
-    // add items to corresponding location
-    Kirkhoff.add_item(sushi);
-    Kirkhoff.add_item(clubPamphlet);
-    Mak.add_item(laptop);
+    // Kirkhoff NPCs
+    locs[0].add_npc(NPC ("Coffee Shop employee", "makes the best coffee in all of Kirkhoff"));
 
-    // create NPCs
-    NPC PODStoreEmployee("POD store employee", "supplier of energy drinks");
-    NPC CoffeShopEmployee("Coffee Shop employee", "makes the best coffee in all of Kirkhoff");
-
-    // add NPCs to Location
-    Kirkhoff.add_npc(CoffeShopEmployee);
-    Mak.add_npc(PODStoreEmployee); 
+    // Mak NPC's
+    locs[1].add_npc(NPC ("POD store employee", "supplier of energy drinks")); 
 }
 
 void Game::talk (std::vector<std::string> target) {
@@ -54,6 +51,7 @@ void Game::talk (std::vector<std::string> target) {
 }
 
 void Game::meet (std::vector<std::string> target) {
+    //Item item = std::find();
     std::cout << "meet" << std::endl;
 }
 
@@ -68,10 +66,12 @@ void Game::give (std::vector<std::string> target) {
 std::map<std::string, void(Game::*)(std::vector<std::string>)> Game::setup_commands() {
     std::map<std::string, void(Game::*) (std::vector<std::string>) > commands;
     // mapping keywords to their corresponding function/command
-    commands["talk"] = &talk;
-    commands["meet"] = &meet;
-    commands["take"] = &take;
-    commands["give"] = &give;
+    commands["talk"] = &Game::talk;
+    commands["meet"] = &Game::meet;
+    commands["take"] = &Game::take;
+    commands["give"] = &Game::give;
+
+    //*commandMap["talk"]({"test"});
     
     return commandMap;
 }

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Item.hpp"
 #include "NPC.hpp"
 #include "Location.hpp"
