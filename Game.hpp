@@ -7,7 +7,7 @@
 
 class Game {
    private:  
-      std::vector<Item> itemVector; // vector that holds all the items the player has
+      std::vector<std::reference_wrapper<Item> > itemVector; // vector that holds all the items the player has
       std::vector<std::reference_wrapper<Location>> locationVector; // vector that holds reference_wraps to all locations in the world
       std::vector<Location> locs; // vector that holds the location objects in the world
       int weight; // stores the player's weight
@@ -74,7 +74,11 @@ class Game {
       /* Print a failure message and exits the game*/
       void quit (std::vector<std::string> target);
 
-      //! CREATE TWO ADDITIONAL COMMAND FUNCTIONS
+      /* Teleport to a Location */
+      void teleport (std::vector<std::string> target);
+
+      /* Show all locations the player has visited*/
+      void showVisited (std::vector<std::string> target);
 };
 
 #endif

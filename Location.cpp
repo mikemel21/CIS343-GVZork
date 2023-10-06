@@ -28,7 +28,7 @@ void Location::add_npc(NPC npc) {
     NPCVector.push_back(npc);
 }
 
-std::vector<NPC> Location::get_npcs () const {
+std::vector<std::reference_wrapper<NPC> > Location::get_npcs () const {
     return NPCVector;
 }
 
@@ -36,7 +36,7 @@ void Location::add_item (Item item) {
     ItemVector.push_back(item);
 }
 
-std::vector<Item> Location::get_items() const{
+std::vector<std::reference_wrapper<Item> > Location::get_items() const{
     return ItemVector;
 }
 

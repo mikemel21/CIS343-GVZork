@@ -21,7 +21,7 @@ public:
     std::string name;
     std::string description;
     int messageNum = 0; // increases by 1 evertime player talks to the NPC; goes back to 0 after it is > the message vector
-    std::vector<std::string> messageVector;
+    std::vector<std::reference_wrapper<std::string> > messageVector;
 
     // Constructor that will accept an NPC name and description
     NPC (const std::string& name, const std::string& description);

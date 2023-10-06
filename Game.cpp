@@ -155,7 +155,21 @@ void Game::take (std::vector<std::string> target) {
 }
 
 void Game::give (std::vector<std::string> target) {
-    std::cout << "give" << std::endl;
+    // check if target is in player's inventory
+    auto i = std::find(curLoc.get_items().begin(), curLoc.get_items().end(), target);
+    if (i != itemVector.end()) {
+        itemVector.erase(i);
+    } else {
+        std::cout << "This item is not in your inventory." << std::endl;
+    }
+}
+
+void teleport (std::vector<std::string> target){
+    std::cout << "teleported." << std::endl;
+}
+
+void showVisited (std::vector<std::string> target) {
+    std::cout << "visited place: " << std::endl;
 }
 
 std::map<std::string, void(Game::*)(std::vector<std::string>)> Game::setup_commands() {
@@ -170,6 +184,7 @@ std::map<std::string, void(Game::*)(std::vector<std::string>)> Game::setup_comma
 }
 
 Location Game::random_location() {
+    // Chat GPT assisted in the making of this function as well as the comments on lines 174 and 176
     // Seed the random number generator
     std::random_device rd;
     // Mersenne Twister engine
