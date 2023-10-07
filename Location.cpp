@@ -14,7 +14,7 @@ std::map<std::string, std::reference_wrapper<Location> > Location::get_locations
     return neighbors;
 }
 
-void Location::add_location(std::string direction, std::reference_wrapper<Location> location) {
+void Location::add_location(std::string direction, Location& location) {
     if (direction.empty()) 
         throw std::invalid_argument("direction cannot be empty.");
 
@@ -28,7 +28,7 @@ void Location::add_npc(NPC npc) {
     NPCVector.push_back(npc);
 }
 
-std::vector<std::reference_wrapper<NPC> > Location::get_npcs () const {
+std::vector<NPC> Location::get_npcs () const {
     return NPCVector;
 }
 
@@ -36,7 +36,7 @@ void Location::add_item (Item item) {
     ItemVector.push_back(item);
 }
 
-std::vector<std::reference_wrapper<Item> > Location::get_items() const{
+std::vector<Item> Location::get_items() const{
     return ItemVector;
 }
 

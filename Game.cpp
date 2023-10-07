@@ -6,9 +6,16 @@ Game::Game () {
     create_world();
     locationVector = std::vector<std::reference_wrapper<Location> >(locs.begin(), locs.end());
     cur = random_location();
+    //cur = locs[0];
     weight = 0;
     elfCalorieGoal = 5000;
     commandMap = setup_commands();
+
+    test();
+}
+
+void Game::test () {
+    look({""});
 }
 
 void Game::create_world () {
@@ -84,9 +91,9 @@ void Game::create_world () {
     // sushi
     this->locs[0].add_item(Item ("Sushi", "Raw Fish... ew", 500, 2.0f));
     // club pamphlet
-    this->locs[0].add_item(Item ("Club Pamphlet", "This is a pamphlet for the ... lettuce eating club???", 0, 1.0f));
+    this->locs[0].add_item(Item ("Club Pamphlet", "This", 0, 1.0f));
     // subway sandwich
-    this->locs[0].add_item(Item ("Subway sandwhich", "No matter how big it is I'm never full from it", 200, 2.5f));
+    this->locs[0].add_item(Item ("Subway sandwich", "teste", 200, 2.5f));
 
     //* Mak Items
     // laptop
@@ -156,12 +163,17 @@ void Game::take (std::vector<std::string> target) {
 
 void Game::give (std::vector<std::string> target) {
     // check if target is in player's inventory
-    auto i = std::find(curLoc.get_items().begin(), curLoc.get_items().end(), target);
-    if (i != itemVector.end()) {
-        itemVector.erase(i);
-    } else {
-        std::cout << "This item is not in your inventory." << std::endl;
-    }
+    // auto i = std::find(curLoc.get_items().begin(), curLoc.get_items().end(), target);
+    // if (i != itemVector.end()) {
+    //     itemVector.erase(i);
+    // } else {
+    //     std::cout << "This item is not in your inventory." << std::endl;
+    // }
+}
+
+void Game::look (std::vector<std::string> target) {
+    // print current location
+    std::cout << curLoc << std::endl;
 }
 
 void teleport (std::vector<std::string> target){
