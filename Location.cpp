@@ -1,5 +1,8 @@
 #include "Location.hpp"
-
+/*
+    Michael Melei
+    Justin Burch
+*/
 Location::Location () {
     this->name = "";
     this->description = "";

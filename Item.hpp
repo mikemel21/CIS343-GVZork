@@ -3,6 +3,10 @@
 
 #include <iostream>
 #include <string>
+/*
+    Michael Melei
+    Justin Burch
+*/
 /* An Item is an object the player will encounter along the way;
     Items have:
         - a name (non-empty string)

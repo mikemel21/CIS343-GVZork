@@ -2,6 +2,11 @@
 #include <random>
 #include <functional>
 
+/*
+    Michael Melei
+    Justin Burch
+*/
+
 Game::Game () {
     create_world();
     locationVector = std::vector<std::reference_wrapper<Location> >(locs.begin(), locs.end());
@@ -23,8 +28,9 @@ void Game::test () {
     // for (Item& item : itemVector) {
     //     std::cout << item << std::endl;
     // }
-    teleport({"Manitou"});
-    std::cout << "---" << curLoc << std::endl;
+    //teleport({""});
+    //std::cout << "---" << curLoc << std::endl;
+    show_help({""});
 }
 
 void Game::create_world () {
@@ -183,32 +189,31 @@ void Game::meet (std::vector<std::string> target) {
 }
 
 void Game::take (std::vector<std::string> target) {
-//     std::cout << "take" << std::endl;
-//     if (target.empty()) {
-//         std::cout << "invalid item." << std::endl;
-//         return;
-//     }
+    std::cout << "take" << std::endl;
+    if (target.empty()) {
+        std::cout << "invalid item." << std::endl;
+        return;
+    }
 
-//     std::string targetItem = target[0];
-//     for (Item& item : curLoc.get_items()) {
-//         if (item.name == targetItem) {
-//             auto it = std::find(curLoc.get_items().begin(), curLoc.get_items().end(), item.name);
-//             itemVector.push_back(item);
-//             curLoc.get_items().erase(it);
-//             weight += item.weight;
-//             return;
-//         }
-//     }
+    std::string targetItem = target[0];
+    for (Item& item : curLoc.get_items()) {
+        if (item.name == targetItem) {
+            auto it = std::find(curLoc.get_items().begin(), curLoc.get_items().end(), item.name);
+            itemVector.push_back(item);
+            curLoc.get_items().erase(it);
+            weight += item.weight;
+            return;
+        }
+    }
 }
 
 void Game::give (std::vector<std::string> target) {
     // check if target is in player's inventory
-    // auto i = std::find(curLoc.get_items().begin(), curLoc.get_items().end(), target);
-    // if (i != itemVector.end()) {
-    //     itemVector.erase(i);
-    // } else {
-    //     std::cout << "This item is not in your inventory." << std::endl;
-    // }
+    if (itemVector.empty()) {
+        std::cout << "You have no items." << std::endl;
+    } else {
+
+    }
 }
 
 void Game::look (std::vector<std::string> target) {
@@ -246,21 +251,30 @@ void Game::look (std::vector<std::string> target) {
 }
 
 void Game::teleport (std::vector<std::string> target) {
+    bool isFound = false;
     if (target.empty()) {
         std::cout << "Invalid location." << std::endl;
     }
     std::string targetLocation = target[0];
     for (const auto& loc : curLoc.get_locations()) {
         if (targetLocation == loc.second.get().name) {
+            isFound = true;
             cur = loc.second;
-            curLoc = cur;
+            break;
         }
     }
+
+    if (!isFound)
+        std::cout << "Location not found." << std::endl;
 }
 
 void Game::showVisited (std::vector<std::string> target) {
     std::cout << "visited locations: " << std::endl;
-    
+    for (const Location& loc : locationVector) {
+        if (loc.get_visited() == true) {
+            std::cout << "- " << loc << std::endl;
+        }
+    }
 }
 
 std::map<std::string, void(Game::*)(std::vector<std::string>)> Game::setup_commands() {
@@ -270,6 +284,12 @@ std::map<std::string, void(Game::*)(std::vector<std::string>)> Game::setup_comma
     commands["meet"] = &Game::meet;
     commands["take"] = &Game::take;
     commands["give"] = &Game::give;
+    commands["look"] = &Game::look;
+    commands["go"] = &Game::go;
+    commands["show items"] = &Game::show_items;
+    commands["show help"] = &Game::show_help;
+    commands["teleport"] = &Game::teleport;
+    commands["show visited"] = &Game::showVisited;
     
     return commandMap;
 }
@@ -291,74 +311,105 @@ Location Game::random_location() {
 }
 
 void Game::go (std::vector<std::string> target) {
-
+    curLoc.set_visited();
+    if (weight > 30) {
+        std::cout << "Your weight is over 30." << std::endl;
+        return;
+    }
+    std::string targ = target[0];
+    for (const auto& entry : curLoc.get_locations()) {
+        // if target matches anything in the neighbors vector
+        if (entry.second.get().name == targ) {
+            // set curLoc to the target
+            curLoc = entry.second;
+            break;
+        }
+    }
 }
 
 void Game::show_items (std::vector<std::string> target) {
+    std::cout << "Your Items: " << std::endl;
+    for (const Item& item : itemVector) {
+        std::cout << "\t- " << item << std::endl;
+    }
+    std::cout << "Your Weight: " << weight << std::endl;
+}
+
+void Game::show_help (std::vector<std::string> target) {
+    std::cout << "Available Commands: " << std::endl;
+    for (const auto& com : commandMap) {
+        std::cout << "- " << com.first << std::endl;
+    }
+}
+
+void Game::quit (std::vector<std::string> target) {
 
 }
 
-// void Game::play(){
-//     //Print msg descriing game
-//     std::cout << "Message Describing game (still needed)" << std::endl;
+void Game::play(){
+    //Print msg describing game
+    std::cout << "Welcome to GVZork!\n" << "The goal of this game is to " << 
+                  "travel throughout the Grand Valley Campus and collect "<<
+                  "items to give to the Elf.\n" <<
+                  "In order to complete the game, you must give the elf enough calories!" << std::endl;
 
-//     // Tokens vector
-//     std::vector<std::string> tokens;
+    // // Tokens vector
+    // std::vector<std::string> tokens;
 
-//     //Have a loop that tells user to enter command
-//     //Split user input into vector of words
-//     while (inProgress) {
+    // //Have a loop that tells user to enter command
+    // //Split user input into vector of words
+    // while (inProgress) {
 
-//         std::cout << "Enter commands to interact with the game." << std::endl;
-//         std::cout << "> "; //shows that user can inupt text 
-//         std::string user_Response;
-//         std::getline(std::cin, user_Response);
+    //     std::cout << "Enter commands to interact with the game." << std::endl;
+    //     std::cout << "> "; //shows that user can inupt text 
+    //     std::string user_Response;
+    //     std::getline(std::cin, user_Response);
 
-//         //if token not empty 
-//         if(!tokens.empty()){
-//             // Split user input into vector of words
-//             tokens = std::split(user_Response, );//user_Response.split();
-//             std::string command = tokens[0];
-//             //removes first word in element becuse thats command
-//             del(tokens[0])
-//             //Makes target whatever string is after the first word
-//             target = ' '.join(tokens)
-//             //Example below
-//             //should look like this if user enters "talk ball of light"
-//             //command = talk,
-//             //target  = ball of light
+    //     //if token not empty 
+    //     if(!tokens.empty()){
+    //         // Split user input into vector of words
+    //         tokens = std::split(user_Response, );//user_Response.split();
+    //         std::string command = tokens[0];
+    //         //removes first word in element becuse thats command
+    //         del(tokens[0])
+    //         //Makes target whatever string is after the first word
+    //         target = ' '.join(tokens)
+    //         //Example below
+    //         //should look like this if user enters "talk ball of light"
+    //         //command = talk,
+    //         //target  = ball of light
 
-//             //TODO 
-//             //idk if right sentax
-//             //call map command my useing this key
+    //         //TODO 
+    //         //idk if right sentax
+    //         //call map command my useing this key
 
-//             //TESTING PURPUSES REMOVE
-//             if(command = "quit"){
-//                 inProgress = 0
-//             }
+    //         //TESTING PURPUSES REMOVE
+    //         if(command = "quit"){
+    //             inProgress = 0
+    //         }
 
 
-//             if (commandMap.find(command) != commandMap.end()) {
-//                 std::cout << "Command is recognized." << std::endl;
-//             } 
-//             else {
-//                 std::cout << "Command not recognized." << std::endl;
-//             }
-//             //pass target as perameter to it 
-//             //if map for command does not exits 
-//             //tell user there command does not exist
+    //         if (commandMap.find(command) != commandMap.end()) {
+    //             std::cout << "Command is recognized." << std::endl;
+    //         } 
+    //         else {
+    //             std::cout << "Command not recognized." << std::endl;
+    //         }
+    //         //pass target as perameter to it 
+    //         //if map for command does not exits 
+    //         //tell user there command does not exist
 
-//         }
+    //     }
         
-//     }
+    // }
 
-//     //TODO
-//     //Check if elf has enough calories
-//     //if yes
-//     std::cout << "success" << std::endl;
-//     //quit game
+    // //TODO
+    // //Check if elf has enough calories
+    // //if yes
+    // std::cout << "success" << std::endl;
+    // //quit game
 
-//     //if no
-//     std::cout << "failure" << std::endl;
-//     //quit game
-// }
+    // //if no
+    // std::cout << "failure" << std::endl;
+    // //quit game
+}

@@ -1,5 +1,9 @@
 #include "NPC.hpp"
 #include <stdexcept>
+/*
+    Michael Melei
+    Justin Burch
+*/
 NPC::NPC (const std::string& name, const std::string& description) {
     this->name = name;
     this->description = description;

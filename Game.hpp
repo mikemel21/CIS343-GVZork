@@ -1,10 +1,14 @@
 #ifndef GAME_HPP
 #define GAME_HPP
+
 // Holds all logic for game instance
 
 #include "Item.hpp"
 #include "Location.hpp"
-
+/*
+    Michael Melei
+    Justin Burch
+*/
 class Game {
    private:  
       std::vector<std::reference_wrapper<Item> > itemVector; // vector that holds all the items the player has
@@ -38,7 +42,7 @@ class Game {
 
       /* prints out a help message and all the commands from the command map's keys; 
          Also posts current time */
-      void show_help();
+      void show_help(std::vector<std::string> target);
 
       /* Checks if provided NPC is in the current room; if it is, call the NPC's 
          get_message method and print it */

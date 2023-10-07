@@ -15,7 +15,10 @@
 #include <vector>
 #include "NPC.hpp"
 #include "Item.hpp"
-
+/*
+    Michael Melei
+    Justin Burch
+*/
 class Location {
 private:
     //std::string name;

@@ -1,5 +1,9 @@
 #ifndef NPC_HPP
 #define NPC_HPP
+/*
+    Michael Melei
+    Justin Burch
+*/
 /* NPC class represents info about a character in a Location;
    NPCs have a:
     - name
