@@ -18,13 +18,15 @@
 
 class Location {
 private:
-    std::string name;
+    //std::string name;
     std::string description;
     bool visited;
     std::map<std::string, std::reference_wrapper<Location> > neighbors;
     std::vector<NPC> NPCVector;
     std::vector<Item> ItemVector;
 public:
+    std::string name;
+
     Location ();
     // Constructor that takes a Location name and description
     Location (const std::string& name, const std::string& description);

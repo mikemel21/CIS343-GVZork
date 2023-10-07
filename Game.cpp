@@ -5,7 +5,8 @@
 Game::Game () {
     create_world();
     locationVector = std::vector<std::reference_wrapper<Location> >(locs.begin(), locs.end());
-    cur = random_location();
+    //cur = random_location();
+    cur = locs[1];
     curLoc = cur;
     weight = 0;
     elfCalorieGoal = 5000;
@@ -15,7 +16,15 @@ Game::Game () {
 }
 
 void Game::test () {
-    look({""});
+    // std::cout << "weight before: " << weight << std::endl;
+    // //take({"Laptop"});
+    // std::cout << "weight after: " << weight << std::endl;
+    // std::cout << "player inventory: " << std::endl;
+    // for (Item& item : itemVector) {
+    //     std::cout << item << std::endl;
+    // }
+    teleport({"Manitou"});
+    std::cout << "---" << curLoc << std::endl;
 }
 
 void Game::create_world () {
@@ -122,8 +131,11 @@ void Game::create_world () {
     this->locs[0].add_npc(NPC ("Coffee Shop employee", "makes the best coffee in all of Kirkhoff"));
 
     //*Mak NPC's
+    NPC ProfessorWoodring("Professor Woodring", "Will sometimes respond to 'Mustang'.");
+    ProfessorWoodring.messageVector.push_back("Test message");
+
     this->locs[1].add_npc(NPC ("POD store employee", "supplier of energy drinks"));
-    this->locs[1].add_npc(NPC ("Professor Woodring", "Will sometimes respond to 'Mustang'."));
+    this->locs[1].add_npc(ProfessorWoodring);
 
     //*Gym NPC's
     this->locs[6].add_npc(NPC ("Gym bro", "I wonder if he knows where food is."));
@@ -133,32 +145,60 @@ void Game::create_world () {
 }
 
 void Game::talk (std::vector<std::string> target) {
-    //std::cout << "talk" << std::endl;
+    std::cout << "talk" << std::endl;
     // Get NPCs in the current room using the get_npcs() method
-    // std::vector<NPC> currentRoomNPCs = curLoc.get_npcs();
+    std::vector<NPC> currentRoomNPCs = curLoc.get_npcs();
 
-    // // Check if the provided NPC is in the current room 
-    //     bool in_room = false;
-    //     for (NPC& npc : currentRoomNPCs) { //not really sure how this 4 loop works
-    //         if (npc.getName().compare(target.) == 0) {
-    //             in_room = true;
-    //             std::cout << "You talk to " << target << ": " << npc.getMessage(npc.messageNum) << std::endl;
-    //             break;
-    //         }
-    //     }
+    // Check if the provided NPC is in the current room 
+        bool in_room = false;
+        std::string npcName = target[0];
 
-    //     if (!in_room) {
-    //         std::cout << target << " is not in the current room." << std::endl;
-    //     }
+        for (NPC& npc : curLoc.get_npcs()) { //not really sure how this 4 loop works
+            if (npc.getName() == npcName) {
+                in_room = true;
+                std::cout << "You talk to " << npc.getName() << ": " << npc.getMessage(npc.messageNum) << std::endl;
+                break;
+            }
+        }
+
+        if (!in_room) {
+            std::cout << npcName << " is not in the current room." << std::endl;
+        }
 }
 
 void Game::meet (std::vector<std::string> target) {
-    //Item item = std::find();
-    std::cout << "meet" << std::endl;
+    if (target.empty())
+        std::cout << "Invalid NPC." << std::endl;
+    else{
+        std::string npcName = target[0];
+        
+        for (const NPC& npc : curLoc.get_npcs()) {
+            if (npc.getName() == npcName) {
+                std::cout << "You met " << npc << ": " << npc.getDesc();
+                return;
+            }
+        }
+        std::cout << "An NPC named " << npcName << "does not exist" << std::endl;
+    }
 }
 
 void Game::take (std::vector<std::string> target) {
-    std::cout << "take" << std::endl;
+//     std::cout << "take" << std::endl;
+//     if (target.empty()) {
+//         std::cout << "invalid item." << std::endl;
+//         return;
+//     }
+
+//     std::string targetItem = target[0];
+//     for (Item& item : curLoc.get_items()) {
+//         if (item.name == targetItem) {
+//             auto it = std::find(curLoc.get_items().begin(), curLoc.get_items().end(), item.name);
+//             itemVector.push_back(item);
+//             curLoc.get_items().erase(it);
+//             weight += item.weight;
+//             return;
+//         }
+//     }
 }
 
 void Game::give (std::vector<std::string> target) {
@@ -172,30 +212,55 @@ void Game::give (std::vector<std::string> target) {
 }
 
 void Game::look (std::vector<std::string> target) {
-    std::cout << "Test" << std::endl;
     // print items in the current location
     if (curLoc.get_items().empty()) {
+        // print if no items
         std::cout << "There are no items in this location." << std::endl;
     } else {
-        std::cout << "Here are the items in this location: " << std::endl;
-        std::cout << curLoc.get_items() << std::endl;
+        std::cout << "Items in this location: " << std::endl;
+        for (const Item& item : curLoc.get_items())
+            std::cout << "- " << item << std::endl;
+        std::cout << std::endl;
     }
 
     // print NPCs
     if (curLoc.get_npcs().empty()) {
         std::cout << "You are alone." << std::endl;
-        //curLoc.get_locations().
     } else {
-        curLoc.get_npcs();
+        std::cout << "NPCs in this location: " << std::endl;
+        for (const NPC& npc : curLoc.get_npcs())
+            std::cout << "- " << npc << std::endl;
+        std::cout << std::endl;
+    }
+    // Print Locations
+    std::cout << "Where to go: " << std::endl;
+    for (const auto& loc : curLoc.get_locations()) {
+        // if location was visited, print the direction and location name
+        if (loc.second.get().get_visited()) {
+            std::cout << "- " << loc.first << "- " << loc.second.get().name << std::endl;
+        } else {
+            // if not visited, print only direction
+            std::cout << "- " << loc.first << std::endl;
+        }
     }
 }
 
-void teleport (std::vector<std::string> target){
-    std::cout << "teleported." << std::endl;
+void Game::teleport (std::vector<std::string> target) {
+    if (target.empty()) {
+        std::cout << "Invalid location." << std::endl;
+    }
+    std::string targetLocation = target[0];
+    for (const auto& loc : curLoc.get_locations()) {
+        if (targetLocation == loc.second.get().name) {
+            cur = loc.second;
+            curLoc = cur;
+        }
+    }
 }
 
-void showVisited (std::vector<std::string> target) {
-    std::cout << "visited place: " << std::endl;
+void Game::showVisited (std::vector<std::string> target) {
+    std::cout << "visited locations: " << std::endl;
+    
 }
 
 std::map<std::string, void(Game::*)(std::vector<std::string>)> Game::setup_commands() {
@@ -225,10 +290,20 @@ Location Game::random_location() {
     return locationVector[randNum];
 }
 
+void Game::go (std::vector<std::string> target) {
+
+}
+
+void Game::show_items (std::vector<std::string> target) {
+
+}
 
 // void Game::play(){
 //     //Print msg descriing game
 //     std::cout << "Message Describing game (still needed)" << std::endl;
+
+//     // Tokens vector
+//     std::vector<std::string> tokens;
 
 //     //Have a loop that tells user to enter command
 //     //Split user input into vector of words
@@ -242,8 +317,7 @@ Location Game::random_location() {
 //         //if token not empty 
 //         if(!tokens.empty()){
 //             // Split user input into vector of words
-//             std::vector<std::string> tokens;
-//             std::tokens = std::split(user_Response, );//user_Response.split();
+//             tokens = std::split(user_Response, );//user_Response.split();
 //             std::string command = tokens[0];
 //             //removes first word in element becuse thats command
 //             del(tokens[0])

@@ -79,7 +79,6 @@ class Game {
       /* Show all locations the player has visited*/
       void showVisited (std::vector<std::string> target);
 
-      // DELETE
       void test ();
 };
 
