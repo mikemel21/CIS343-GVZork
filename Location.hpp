@@ -66,6 +66,6 @@ public:
     - direction - location (whether it has been visited)
 
     */
-    friend std::ostream& operator<<(std::ostream& os, std::reference_wrapper<Location> location);
+    friend std::ostream& operator<<(std::ostream& os, const Location& location);
 };
 #endif

@@ -6,7 +6,7 @@ Game::Game () {
     create_world();
     locationVector = std::vector<std::reference_wrapper<Location> >(locs.begin(), locs.end());
     cur = random_location();
-    //cur = locs[0];
+    curLoc = cur;
     weight = 0;
     elfCalorieGoal = 5000;
     commandMap = setup_commands();
@@ -172,8 +172,22 @@ void Game::give (std::vector<std::string> target) {
 }
 
 void Game::look (std::vector<std::string> target) {
-    // print current location
-    std::cout << curLoc << std::endl;
+    std::cout << "Test" << std::endl;
+    // print items in the current location
+    if (curLoc.get_items().empty()) {
+        std::cout << "There are no items in this location." << std::endl;
+    } else {
+        std::cout << "Here are the items in this location: " << std::endl;
+        std::cout << curLoc.get_items() << std::endl;
+    }
+
+    // print NPCs
+    if (curLoc.get_npcs().empty()) {
+        std::cout << "You are alone." << std::endl;
+        //curLoc.get_locations().
+    } else {
+        curLoc.get_npcs();
+    }
 }
 
 void teleport (std::vector<std::string> target){
