@@ -30,7 +30,8 @@ void Game::test () {
     // }
     //teleport({""});
     //std::cout << "---" << curLoc << std::endl;
-    show_help({""});
+    //show_help({""});
+    take({"Laptop"});
 }
 
 void Game::create_world () {
@@ -189,22 +190,20 @@ void Game::meet (std::vector<std::string> target) {
 }
 
 void Game::take (std::vector<std::string> target) {
-    std::cout << "take" << std::endl;
-    if (target.empty()) {
-        std::cout << "invalid item." << std::endl;
-        return;
-    }
+    // std::cout << "take" << std::endl;
+    // if (target.empty()) {
+    //     std::cout << "invalid item." << std::endl;
+    //     return;
+    // }
 
-    std::string targetItem = target[0];
-    for (Item& item : curLoc.get_items()) {
-        if (item.name == targetItem) {
-            auto it = std::find(curLoc.get_items().begin(), curLoc.get_items().end(), item.name);
-            itemVector.push_back(item);
-            curLoc.get_items().erase(it);
-            weight += item.weight;
-            return;
-        }
-    }
+    // const std::string targetItem = target[0];
+    // for (Item& item : curLoc.get_items()) {
+    //     if (item.name == targetItem) {
+    //         weight += item.weight;
+    //         itemVector.push_back(item);
+    //         curLoc.get_items().erase(std::remove(curLoc.get_items().begin(), curLoc.get_items().end(), targetItem), curLoc.get_items().end());
+    //     }
+    // }
 }
 
 void Game::give (std::vector<std::string> target) {
