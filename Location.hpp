@@ -50,7 +50,7 @@ public:
     void add_item(Item item);
 
     // Getter to return the vector of Items
-    std::vector<Item> get_items() const;
+    std::vector<Item> get_items();
 
     // Setter that changes the visited variable to true; once location is visited, it can no longer be false
     void set_visited();

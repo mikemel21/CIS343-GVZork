@@ -11,11 +11,12 @@
 */
 class Game {
    private:  
-      std::vector<std::reference_wrapper<Item> > itemVector; // vector that holds all the items the player has
+      std::vector<Item> itemVector; // vector that holds all the items the player has
       std::vector<std::reference_wrapper<Location> > locationVector; // vector that holds reference_wraps to all locations in the world
       std::vector<Location> locs; // vector that holds the location objects in the world
       int weight; // stores the player's weight
       int elfCalorieGoal; // stores the # of calories the elf needs to save the campus
+      int curCals = 0; // current calories the elf has
       bool inProgress = true; // bool that stores whether the game is in progress
       // stores player's current location
       Location cur;
@@ -79,9 +80,8 @@ class Game {
 
       /* Teleport to a Location */
       void teleport (std::vector<std::string> target);
-
-      /* Show all locations the player has visited*/
-      void showVisited (std::vector<std::string> target);
+      /* Checks to see if item is in the player's inventory and if so, removes it from the inventory and subtracts its weight*/
+      void eatItem (std::vector<std::string> target);
 
       void test ();
 };

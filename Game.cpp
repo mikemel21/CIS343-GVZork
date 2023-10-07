@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include <random>
 #include <functional>
+#include <sstream>
 
 /*
     Michael Melei
@@ -11,47 +12,34 @@ Game::Game () {
     create_world();
     locationVector = std::vector<std::reference_wrapper<Location> >(locs.begin(), locs.end());
     //cur = random_location();
-    cur = locs[1];
+    cur = locationVector[0];
     curLoc = cur;
     weight = 0;
     elfCalorieGoal = 5000;
     commandMap = setup_commands();
 
-    test();
-}
-
-void Game::test () {
-    // std::cout << "weight before: " << weight << std::endl;
-    // //take({"Laptop"});
-    // std::cout << "weight after: " << weight << std::endl;
-    // std::cout << "player inventory: " << std::endl;
-    // for (Item& item : itemVector) {
-    //     std::cout << item << std::endl;
-    // }
-    //teleport({""});
-    //std::cout << "---" << curLoc << std::endl;
-    //show_help({""});
-    take({"Laptop"});
+    play();
 }
 
 void Game::create_world () {
     // create/add locations to the location vector
-    // kirkhoff -> locationVector[0]
-    this->locs.push_back(Location("Kirkhoff", "Has food and club meeting areas."));
-    // Mak -> locationVector[1]
-    this->locs.push_back(Location("Mackinac Hall", "Where computer science majors go to cry"));
-    // Clocktower -> locationVector[2]
-    this->locs.push_back(Location("Carillon Clocktower", "Scares you with a bell every 15 minutes"));
-    // Bridge -> locationVector[3]
-    this->locs.push_back(Location("Little Mak Bridge", "Not so little when you're scared of heights"));
-    // Blue Connection -> locationVector[4]
-    this->locs.push_back(Location("The Blue Connecion", "Food, classrooms. There's always something in here for you."));
-    // Water fountain -> locationVector[5]
-    this->locs.push_back(Location("Water Fountain","I wonder if there are fish in there..."));
-    // Gym -> locationVector[6]
-    this->locs.push_back(Location("Gym", "You'll probably find protein powder in here."));
-    // Manitou -> locationVector[7]
-    this->locs.push_back(Location("Manitou Hall", "Still don't know the difference between this and Makinac hall"));
+    Location Kirkhoff ("Kirkhoff", "Has food and club meeting areas.");
+    Location MackinacHall ("Mackinac Hall", "Where computer science majors go to cry");
+    Location Clocktower ("Carillon Clocktower", "Scares you with a bell every 15 minutes");
+    Location Bridge ("Little Mak Bridge", "Not so little when you're scared of heights");
+    Location BlueConnection ("The Blue Connecion", "Food, classrooms. There's always something in here for you.");
+    Location WaterFountain ("Water Fountain","I wonder if there are fish in there...");
+    Location Gym ("Gym", "You'll probably find protein powder in here.");
+    Location Manitou ("Manitou Hall", "Still don't know the difference between this and Makinac hall");
+
+    this->locs.push_back(Kirkhoff);
+    this->locs.push_back(MackinacHall);
+    this->locs.push_back(Clocktower);
+    this->locs.push_back(Bridge);
+    this->locs.push_back(BlueConnection);
+    this->locs.push_back(WaterFountain);
+    this->locs.push_back(Gym);
+    this->locs.push_back(Manitou);
 
     // add clocktower as neighbor to Kirkhoff
     this->locs[0].add_location("North", locs[2]);
@@ -190,20 +178,20 @@ void Game::meet (std::vector<std::string> target) {
 }
 
 void Game::take (std::vector<std::string> target) {
-    // std::cout << "take" << std::endl;
-    // if (target.empty()) {
-    //     std::cout << "invalid item." << std::endl;
-    //     return;
-    // }
+    std::string targetItem = target[0];
 
-    // const std::string targetItem = target[0];
-    // for (Item& item : curLoc.get_items()) {
-    //     if (item.name == targetItem) {
-    //         weight += item.weight;
-    //         itemVector.push_back(item);
-    //         curLoc.get_items().erase(std::remove(curLoc.get_items().begin(), curLoc.get_items().end(), targetItem), curLoc.get_items().end());
-    //     }
-    // }
+    auto it = std::find_if(curLoc.get_items().begin(), curLoc.get_items().end(),
+                    [targetItem](const Item& item) { return item.name == targetItem; });
+
+    if (it != curLoc.get_items().end()) {
+        // Erase the item from the vector
+        curLoc.get_items().erase(it);
+        //itemVector.push_back(*it);
+        weight += it->weight;
+        std::cout << "Item '" << targetItem << "' was taken" << std::endl;
+    } else {
+        std::cout << "Item '" << targetItem << "' not found." << std::endl;
+    }       
 }
 
 void Game::give (std::vector<std::string> target) {
@@ -267,13 +255,21 @@ void Game::teleport (std::vector<std::string> target) {
         std::cout << "Location not found." << std::endl;
 }
 
-void Game::showVisited (std::vector<std::string> target) {
-    std::cout << "visited locations: " << std::endl;
-    for (const Location& loc : locationVector) {
-        if (loc.get_visited() == true) {
-            std::cout << "- " << loc << std::endl;
-        }
-    }
+void Game::eatItem (std::vector<std::string> target) {
+    std::string targetItem = target[0];
+    // utilized ChatGPT for the auto it lambda
+    auto it = std::find_if(itemVector.begin(), itemVector.end(),
+                    [targetItem](const Item& item) { return item.name == targetItem; });
+
+    if (it != itemVector.end()) {
+        // Erase the item from the vector
+        itemVector.erase(it);
+        weight -= it->weight;
+        std::cout << "Item '" << targetItem << "' was yummy." << std::endl;
+    } else {
+        std::cout << "Item '" << targetItem << "' not found." << std::endl;
+    }       
+    
 }
 
 std::map<std::string, void(Game::*)(std::vector<std::string>)> Game::setup_commands() {
@@ -285,12 +281,13 @@ std::map<std::string, void(Game::*)(std::vector<std::string>)> Game::setup_comma
     commands["give"] = &Game::give;
     commands["look"] = &Game::look;
     commands["go"] = &Game::go;
-    commands["show items"] = &Game::show_items;
-    commands["show help"] = &Game::show_help;
+    commands["items"] = &Game::show_items;
+    commands["help"] = &Game::show_help;
     commands["teleport"] = &Game::teleport;
-    commands["show visited"] = &Game::showVisited;
+    commands["eat"] = &Game::eatItem;
+    commands["quit"] = &Game::quit;
     
-    return commandMap;
+    return commands;
 }
 
 Location Game::random_location() {
@@ -342,73 +339,69 @@ void Game::show_help (std::vector<std::string> target) {
 }
 
 void Game::quit (std::vector<std::string> target) {
-
+    inProgress == false;
+    if (curCals >= 500) {
+        std::cout << "You win!" << std::endl;
+    } else {
+        std::cout << "You have failed..." << std::endl;
+    }
+    std::exit(0);
 }
 
-void Game::play(){
+void Game::play() {
     //Print msg describing game
     std::cout << "Welcome to GVZork!\n" << "The goal of this game is to " << 
                   "travel throughout the Grand Valley Campus and collect "<<
                   "items to give to the Elf.\n" <<
-                  "In order to complete the game, you must give the elf enough calories!" << std::endl;
+                  "In order to complete the game, you must give the elf enough calories!\n" << std::endl;
+    show_help({""});
 
-    // // Tokens vector
-    // std::vector<std::string> tokens;
+    // put all commands in a vector
+    std::vector<std::pair<std::string, void(Game::*)(std::vector<std::string>)> > commandVector;
+    for (auto& pair : commandMap) {
+        commandVector.push_back(pair);
+    }
 
-    // //Have a loop that tells user to enter command
-    // //Split user input into vector of words
-    // while (inProgress) {
+    // Tokens vector
+    std::vector<std::string> tokens;
 
-    //     std::cout << "Enter commands to interact with the game." << std::endl;
-    //     std::cout << "> "; //shows that user can inupt text 
-    //     std::string user_Response;
-    //     std::getline(std::cin, user_Response);
-
-    //     //if token not empty 
-    //     if(!tokens.empty()){
-    //         // Split user input into vector of words
-    //         tokens = std::split(user_Response, );//user_Response.split();
-    //         std::string command = tokens[0];
-    //         //removes first word in element becuse thats command
-    //         del(tokens[0])
-    //         //Makes target whatever string is after the first word
-    //         target = ' '.join(tokens)
-    //         //Example below
-    //         //should look like this if user enters "talk ball of light"
-    //         //command = talk,
-    //         //target  = ball of light
-
-    //         //TODO 
-    //         //idk if right sentax
-    //         //call map command my useing this key
-
-    //         //TESTING PURPUSES REMOVE
-    //         if(command = "quit"){
-    //             inProgress = 0
-    //         }
-
-
-    //         if (commandMap.find(command) != commandMap.end()) {
-    //             std::cout << "Command is recognized." << std::endl;
-    //         } 
-    //         else {
-    //             std::cout << "Command not recognized." << std::endl;
-    //         }
-    //         //pass target as perameter to it 
-    //         //if map for command does not exits 
-    //         //tell user there command does not exist
-
-    //     }
+    //Have a loop that tells user to enter command
+    //Split user input into vector of words
+    while (inProgress) {
+        std::cout << "Enter commands to interact with the game." << std::endl;
+        std::cout << "> "; //shows that user can inupt text 
+        std::string user_Response;
+        std::getline(std::cin, user_Response);
+        std::istringstream iss(user_Response);
+        std::string word;
+        std::vector<std::string> token;        
         
-    // }
+        while (iss >> word) {
+            token.push_back(word);
+        }
 
-    // //TODO
-    // //Check if elf has enough calories
-    // //if yes
-    // std::cout << "success" << std::endl;
-    // //quit game
+        //if token not empty 
+       if(!token.empty()){
+            // Split user input into vector of words
+            //tokens = std::split(user_Response, );//user_Response.split();
+            std::string command = token[0];
 
-    // //if no
-    // std::cout << "failure" << std::endl;
-    // //quit game
+            //removes first word in element becuse thats command
+            token.erase(token.begin());
+
+            // Initialize the concatenated string with the first word
+            std::string target = token.empty() ? "" : token[0];
+            // Concatenate the remaining words, adding a space before each word except the last one
+            for (size_t i = 1; i < token.size(); ++i) {
+                target += " " + token[i];
+            }
+
+            auto it = commandMap.find(command);
+            if (it != commandMap.end()) {
+                (this->*(it->second))({target});  
+            } else {
+                std::cout << "Invalid command." << std::endl;
+            }
+        }
+    }
 }

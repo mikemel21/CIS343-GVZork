@@ -39,7 +39,7 @@ void Location::add_item (Item item) {
     ItemVector.push_back(item);
 }
 
-std::vector<Item> Location::get_items() const{
+std::vector<Item> Location::get_items() {
     return ItemVector;
 }
 
